@@ -1,15 +1,13 @@
 class Solution:
     def countBinarySubstrings(self, s: str) -> int:
-        blocks = [1]
-        
+        prev, curr = 0, 1
+        ans = 0
         for i in range(1, len(s)):
-            if s[i] == s[i-1]:
-                blocks[-1] += 1  
+            if s[i - 1] == s[i]:
+                curr += 1
             else:
-                blocks.append(1)  
+                ans += min(prev, curr)
+                prev, curr = curr, 1
         
-        subStringCount = 0
-        for i in range(1, len(blocks)):
-            subStringCount += min(blocks[i], blocks[i-1])
-        
-        return subStringCount
+        ans += min(prev, curr)
+        return ans
