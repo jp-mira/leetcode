@@ -11,7 +11,6 @@ class Solution:
             for j in range(m-1, -1, -1):
                 p[i][j] = suffix
                 suffix = (suffix * grid[i][j]) % MOD
-                print(p[i][j])
         
         prefix = 1
         for i in range(n):
