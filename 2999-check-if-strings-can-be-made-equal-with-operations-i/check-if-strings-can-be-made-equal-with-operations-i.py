@@ -1,9 +1,14 @@
 class Solution:
     def canBeEqual(self, s1: str, s2: str) -> bool:
-        even_s1 = sorted([s1[0], s1[2]])
-        even_s2 = sorted([s2[0], s2[2]])
-        
-        odd_s1 = sorted([s1[1], s1[3]])
-        odd_s2 = sorted([s2[1], s2[3]])
-        
-        return even_s1 == even_s2 and odd_s1 == odd_s2
+        n = len(s1)
+        e1, o1 = defaultdict(int), defaultdict(int)
+        e2, o2 = defaultdict(int), defaultdict(int)
+
+        for i in range(n):
+            if i % 2 == 0:
+                e1[s1[i]] += 1
+                e2[s2[i]] += 1
+            else:
+                o1[s1[i]] += 1
+                o2[s2[i]] += 1
+        return e1 == e2 and o1 == o2
