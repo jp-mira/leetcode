@@ -1,6 +1,9 @@
 class Solution:
     def canBeEqual(self, s1: str, s2: str) -> bool:
+
+        #both strings have the same number of length
         n = len(s1)
+        
         #set dictionary which count the number for odd and even indices of s1 and s2
         e1, o1 = defaultdict(int), defaultdict(int)
         e2, o2 = defaultdict(int), defaultdict(int)
