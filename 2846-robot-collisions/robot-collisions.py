@@ -1,43 +1,41 @@
-from typing import List
-
 class Solution:
-    def survivedRobotsHealths(self, positions: List[int], healths: List[int], directions: str) -> List[int]:
-        # Step 1: Sort robots by position
-        robots = sorted(zip(positions, healths, directions, range(len(positions))))
-        
-        stack = []  # stores indices of robots moving right
-        alive = [True] * len(robots)
-        curr_health = [h for _, h, _, _ in robots]
-
-        for i, (pos, health, direction, original_idx) in enumerate(robots):
-            if direction == 'R':
-                stack.append(i)
-            else:  # direction == 'L'
-                while stack and alive[i]:
-                    j = stack[-1]  # last right-moving robot
-                    
-                    if not alive[j]:
-                        stack.pop()
-                        continue
-                    
-                    # Collision happens
-                    if curr_health[j] > curr_health[i]:
-                        curr_health[j] -= 1
-                        alive[i] = False
-                    elif curr_health[j] < curr_health[i]:
-                        curr_health[i] -= 1
-                        alive[j] = False
-                        stack.pop()
-                    else:
-                        alive[i] = False
-                        alive[j] = False
-                        stack.pop()
-        
-        # Step 3: Collect survivors in original order
+    def survivedRobotsHealths(
+        self, positions: List[int], healths: List[int], directions: str
+    ) -> List[int]:
+        n = len(positions)
+        indices = list(range(n))
         result = []
-        for i, (_, _, _, original_idx) in enumerate(robots):
-            if alive[i]:
-                result.append((original_idx, curr_health[i]))
-        
-        result.sort()  # restore original order
-        return [health for _, health in result]
+        stack = deque()
+
+        # Sort indices based on their positions
+        indices.sort(key=lambda x: positions[x])
+
+        for current_index in indices:
+            # Add right-moving robots to the stack
+            if directions[current_index] == "R":
+                stack.append(current_index)
+            else:
+                while stack and healths[current_index] > 0:
+                    # Pop the top robot from the stack for collision check
+                    top_index = stack.pop()
+
+                    if healths[top_index] > healths[current_index]:
+                        # Top robot survives, current robot is destroyed
+                        healths[top_index] -= 1
+                        healths[current_index] = 0
+                        stack.append(top_index)
+                    elif healths[top_index] < healths[current_index]:
+                        # Current robot survives, top robot is destroyed
+                        healths[current_index] -= 1
+                        healths[top_index] = 0
+                    else:
+                        # Both robots are destroyed
+                        healths[current_index] = 0
+                        healths[top_index] = 0
+
+        # Collect surviving robots
+        for index in range(n):
+            if healths[index] > 0:
+                result.append(healths[index])
+
+        return result
