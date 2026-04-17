@@ -1,7 +1,7 @@
 class Solution:
     def minMirrorPairDistance(self, nums: List[int]) -> int:
         prev = dict()
-        ans = float('inf')
+        ans = inf
 
         for i, num in enumerate(nums):
             if num in prev:
